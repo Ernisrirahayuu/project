@@ -1,26 +1,26 @@
 <?php
 
 namespace App;
-use Gaji;
-use Pinjaman;
-use Total;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Karyawan extends Model
 {
-    protected $fillable = ['id','nama','alamat','tanggallahir'];
+    //
+    protected $fillable = ['nama','jabatan_id','alamat','tanggallahir'];
+    
+    public function Jabatan ()
+    {
+    	return $this->belongsTo('App\Jabatan');
+    }
+
     public function Pinjaman ()
     {
     	return $this->hasMany('App\Pinjaman');
     }
 
-    public function Gaji ()
+    public function TotalGaji ()
     {
-    	return $this->hasMany('App\Gaji');
-    }
-
-    public function Total ()
-    {
-    	return $this->hasMany('App\Total');
+    	return $this->hasMany('App\TotalGaji');
     }
 }

@@ -6,9 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pinjaman extends Model
 {
-    protected $fillable = ['id','karyawan_id','jumlahpinjaman'];
+    //
+    protected $table = 'pinjamen';
+    protected $fillable = ['karyawan_id','jumlahpinjaman'];
     public function Karyawan ()
     {
-    	return $this->hasMany('App\Karyawan');
+    	return $this->belongsTo('App\Karyawan');
+    }
+
+    public function TotalGaji()
+    {
+    	return $this->hasMany('App\TotalGaji');
     }
 }

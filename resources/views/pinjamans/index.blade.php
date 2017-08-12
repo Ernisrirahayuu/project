@@ -3,10 +3,10 @@
 <div class="container">
 <div class="row">
 	<center>
-	<h1>Data Karyawan</h1></center>
+	<h1>Data Pinjaman</h1></center>
 	<div class="panel panel-primary">
-		<div class="panel-heading">Data Karyawan
-		<div class="panel-title pull-right"><a class="btn btn-xs btn-success" href="/karyawans/create">Tambah Karyawan</a>
+		<div class="panel-heading">Data Pinjaman
+		<div class="panel-title pull-right"><a class="btn btn-xs btn-success" href="pinjamans/create">Tambah Pinjaman</a>
 		</div>
 		</div>
 		<div class="panel-body">
@@ -14,22 +14,19 @@
 		  	<thead>
 		  	 <tr>
 		  	 	<th>Nama Karyawan</th>
-		  	 	<th>Nama Jabatan</th>
-		  	 	<th>Alamat</th>
-		  	 	<th>Tanggal Lahir</th>
+		  	 	<th>Jumlah Pinjaman</th>
 		  	 	<th colspan="2">Action</th>
 		  	 </tr> 
 		  	 </thead>
 		  	 <tbody>
-		  	 	@foreach($karyawan as $data)
+		  	 	@foreach($pinjaman as $data)
 		  	 	<tr>
-		  	 		<td>{{$data->nama}}</td>
-		  	 		<td>{{$data->jabatan->nama_jabatan}}</td>
-		  	 		<td>{{$data->alamat}}</td>
-		  	 		<td>{{$data->tanggallahir}}</td>
+		  	 		<td>{{$data->Karyawan->nama}}</td>
+		  	 		<td>Rp.{{$data->jumlahpinjaman}}</td>
+
 		   	 	<td>
-		  	 		<a class="btn btn-warning" href="/karyawans/{{$data->id}}/edit">Edit</a>
-		  	 		<form action="{{route('karyawans.destroy',$data->id)}}" method="post">
+		  	 		<a class="btn btn-warning" href="/pinjamans/{{$data->id}}/edit">Edit</a>
+		  	 		<form action="{{route('pinjamans.destroy',$data->id)}}" method="post">
 		  	 			<input name="_method" type="hidden" value="DELETE">
 		  	 			<input name="_token" type="hidden">
 		  	 			<input class="btn btn-danger"  type="submit" value="Delete">

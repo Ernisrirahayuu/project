@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Karyawan; 
-use Yajra\Datatables\Html\Builder; 
-use Yajra\Datatables\Datatables;
-use Session;
-
+use DB;
+use App\Jabatan;
 
 class KaryawanController extends Controller
 {
@@ -16,28 +14,10 @@ class KaryawanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-        public function index(Request $request, Builder $htmlBuilder) { 
-            if ($request->ajax()) { 
-            $karyawan = Karyawan::select(['id', 'nama' ,'alamat', 'tanggallahir']
-                ); 
-            return Datatables::of($karyawan) 
-            ->addColumn('action' , function($karyawans) {
-                return view('datatable._action', [
-                    'model'           =>$karyawans,
-                    'form_url'        =>route('karyawans.destroy', $karyawans->id),
-                    'edit_url'        =>route('karyawans.edit', $karyawans->id),
-                    'confirm_message' =>'Yakin mau menghapus' .$karyawans->name . '?'
-                    ]);
-            })->make(true);
-        }
-    $html = $htmlBuilder 
-    ->addColumn(['data'=>'id', 'name'=>'id', 'title'=>'Id'])
-    ->addColumn(['data' => 'nama', 'name'=>'nama', 'title'=>'Nama'])
-    ->addColumn(['data' => 'alamat', 'name'=>'alamat', 'title'=>'Alamat'])
-    ->addColumn(['data' => 'tanggallahir', 'name'=>'tanggallahir', 'title'=>'Tanggallahir'])
-    ->addColumn(['data'=>'action','name'=>'action','title'=>'','orderable'=>false,
-            'searchable'=>false]);
-return view('karyawans.index')->with(compact('html'));
+        public function index() {
+
+        $karyawan = Karyawan::with('Jabatan')->get();
+        return view('karyawans.index', compact('karyawan'));      
 
     }
 
@@ -49,7 +29,9 @@ return view('karyawans.index')->with(compact('html'));
     public function create()
     {
         //
-        return view('karyawans.create');
+        $jabatan = Jabatan::all();
+        $karyawan = Karyawan::all(); 
+        return view('karyawans.create',compact('jabatan','karyawan'));
     }
 
     /**
@@ -61,9 +43,14 @@ return view('karyawans.index')->with(compact('html'));
     public function store(Request $request)
     {
         //
-        $this->validate($request, ['nama', 'alamat', 'tanggallahir']); 
-        $karyawan = Karyawan::create($request->all());
-         return redirect()->route('karyawans.index');
+        $karyawans = new Karyawan;
+        $karyawans->nama = $request->a;
+        $karyawans->jabatan_id   = $request->b;
+        $karyawans->alamat       = $request->c;
+        $karyawans->tanggallahir = $request->d;
+        $karyawans->save();
+        
+        return redirect()->route('karyawans.index');
 
     }
 
@@ -87,8 +74,9 @@ return view('karyawans.index')->with(compact('html'));
     public function edit($id)
     {
         //
-        $karyawan = Karyawan::find($id);
-        return view('karyawans.edit')->with(compact('karyawan'));
+        $karyawan = Karyawan::findOrFail($id);
+         $jabatan = Jabatan::all();
+        return view('karyawans.edit',compact('karyawan', 'jabatan'));
     }
 
     /**
@@ -101,12 +89,16 @@ return view('karyawans.index')->with(compact('html'));
     public function update(Request $request, $id)
     {
         //
-        $this->validate($request, ['nama'=> 'required|unique:karyawans,nama,  '. $id]);
-        $karyawan = Karyawan::find($id);
-        $karyawan->update($request->all());
-        Session::flash("flash_notification", ["level"=>"success", "message"=>"Berhasil menyimpan $karyawan->name"]);
-
-        return redirect()->route('karyawans.index');
+        $karyawans =Karyawan::find($id);
+        $karyawans->nama = $request->a;
+        $karyawans->jabatan_id    = $request->b;
+        $karyawans->alamat        = $request->c;
+        $karyawans->tanggallahir  =$request->d;
+        $karyawans->save();
+        $karyawan = DB::table('karyawans')
+                    ->join('jabatans', 'karyawans.jabatan_id','=','jabatans.id')
+                    ->select('karyawans.*','jabatans.nama_jabatan')->get();
+        return redirect('karyawans');
     }
 
     /**
@@ -118,13 +110,8 @@ return view('karyawans.index')->with(compact('html'));
     public function destroy($id)
     {
         //
-        if(!Karyawan::destroy($id)) return redirect()->back();
-
-        Session::flash("flash_notification", [
-            "level"=>"success",
-            "message"=>"Karyawan Berhasil Dihapus"
-            ]);
-
-        return redirect()->route('karyawans.index');
+        $karyawan =Karyawan::findOrFail($id);
+        $karyawan->delete();
+        return redirect('/admin/karyawans');
     }
 }

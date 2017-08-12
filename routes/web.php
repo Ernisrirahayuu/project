@@ -20,7 +20,10 @@ Auth::routes();
 Route::get('/home', 'HomeController@index');
 
 Route::group(['middleware'=>'web'], function(){
-Route::group(['prefix'=>'admin' ,'middleware'=>['auth','role:admin']], function() {
+Route::group(['middleware'=>['auth','role:admin']], function() {
+	Route::resource('jabatans', 'JabatanController');
 	Route::resource('karyawans', 'KaryawanController');
+	Route::resource('pinjamans', 'PinjamanController');
+	Route::resource('totalgaji', 'totalgajiController');
 	});
 	});

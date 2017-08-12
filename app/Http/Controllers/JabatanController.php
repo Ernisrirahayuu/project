@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Pinjaman;
-use App\Karyawan;
-use DB;
+use App\Jabatan;
 
-class PinjamanController extends Controller
+class JabatanController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,9 +15,9 @@ class PinjamanController extends Controller
     public function index()
     {
         //
-        $pinjaman = Pinjaman::all();
-      
-        return view('pinjamans.index', compact('pinjaman', 'pinjam')); 
+
+        $jabatan = Jabatan::all();
+        return view('jabatans.index', compact('jabatan'));
     }
 
     /**
@@ -29,8 +27,8 @@ class PinjamanController extends Controller
      */
     public function create()
     {
-        $karyawan=Karyawan::all();
-        return view('pinjamans.create',compact('karyawan'));
+        //
+        return view('jabatans.create');
     }
 
     /**
@@ -42,12 +40,11 @@ class PinjamanController extends Controller
     public function store(Request $request)
     {
         //
-        $this->validate($request,['a'=>'required','b'=>'required']);
-        $pinjaman = new Pinjaman;
-        $pinjaman->karyawan_id = $request->a;
-        $pinjaman->jumlahpinjaman = $request->b;
-        $pinjaman->save();
-        return redirect('pinjamans');
+        $jabatan = new Jabatan;
+        $jabatan->nama_jabatan = $request->a;
+        $jabatan->besar_uang  = $request->b;
+        $jabatan->save();
+        return redirect()->route('jabatans.index');
     }
 
     /**
@@ -59,6 +56,7 @@ class PinjamanController extends Controller
     public function show($id)
     {
         //
+        
     }
 
     /**
@@ -70,9 +68,8 @@ class PinjamanController extends Controller
     public function edit($id)
     {
         //
-        $pinjaman = Pinjaman::findOrFail($id);
-        $karyawan = Karyawan::all();
-        return view('pinjamans.edit',compact('pinjaman', 'karyawan'));
+        $jabatan =Jabatan::findOrFail($id);
+        return view('jabatans.edit',compact('jabatan'));
     }
 
     /**
@@ -85,16 +82,11 @@ class PinjamanController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $pinjaman =Pinjaman::find($id);
-        $pinjaman->karyawan_id = $request->b;
-        $pinjaman->jumlahpinjaman   = $request->a;
-        $pinjaman->save();
-        $pinjaman = DB::table('pinjamen')
-                    ->join('karyawans', 'pinjamen.karyawan_id','=','karyawans.id')
-                    ->select('pinjamen.*','karyawans.nama')->get();
-
-        return view('pinjamans.index', compact('pinjaman', 'karyawan'));
-       
+        $jabatan =Jabatan::findOrFail($id);
+        $jabatan->nama_jabatan = $request->a;
+        $jabatan->besar_uang  = $request->b;
+        $jabatan->save();
+        return redirect()->route('jabatans.index');
     }
 
     /**
@@ -106,8 +98,8 @@ class PinjamanController extends Controller
     public function destroy($id)
     {
         //
-        $pinjaman =Pinjaman::findOrFail($id);
-        $pinjaman->delete();
-        return redirect('pinjamans');
+        $jabatan =Jabatan::findOrFail($id);
+        $jabatan->delete();
+        return redirect()->route('jabatans.index');
     }
 }

@@ -11,10 +11,9 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
+    <link rel="stylesheet" href="{{ asset('/css/font-awesome.min.css')}}">
     <link href="{{ asset('/css/app.css') }}" rel="stylesheet">
      <link href="{{ asset('/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('/css/jquery.dataTables.css') }}" rel="stylesheet">
-    <link href="{{ asset('/css/dataTables.bootstrap.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -40,8 +39,12 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         @if (Auth::check()) 
-                        <li><a href="{{ url('/home') }}">Dashboard</a></li> 
-                        <li><a href="{{ route('karyawans.index') }}">Karyawan</a></li> @endif
+                        <li><a href="{{ url('/home') }}">Home</a></li> 
+                        <li><a href="{{ route('jabatans.index') }}">Jabatan</a></li>
+                        <li><a href="{{ route('karyawans.index') }}">Karyawan</a></li>
+                        <li><a href="{{ route('pinjamans.index') }}">Pinjaman</a></li>
+                        <li><a href="{{ route('totalgaji.index') }}">TotalGaji</a></li>
+                         @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->
